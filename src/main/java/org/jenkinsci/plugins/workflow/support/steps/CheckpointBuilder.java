@@ -8,10 +8,14 @@ import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import jenkins.tasks.SimpleBuildStep;
+import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
 
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.Stapler;
+import org.kohsuke.stapler.StaplerRequest;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +26,7 @@ import java.nio.file.Paths;
 public class CheckpointBuilder extends Builder implements SimpleBuildStep {
 
     private final String stageName;
+
 
     @DataBoundConstructor
     public CheckpointBuilder(String stageName) {
@@ -80,9 +85,20 @@ public class CheckpointBuilder extends Builder implements SimpleBuildStep {
     public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath filePath, @Nonnull Launcher launcher, @Nonnull TaskListener taskListener) throws InterruptedException, IOException {
         EnvVars envVars = run.getEnvironment(taskListener);
         String jobName = envVars.get("JOB_BASE_NAME");
-
         //run.addAction(new CheckpointBuilderAction(run.getParent()));
+        StaplerRequest req = Stapler.getCurrentRequest();
+
+        taskListener.getLogger().println("URL from run: "+ run.getUrl());
+
+        if(run.getUrl().contains("useCheckpoint")) {
+            taskListener.getLogger().println("BUILDER FOUND CHECKPOINT");
+            envVars.put("useCheckpoint","usingCheckpoint");
+        }else taskListener.getLogger().println("BUILDER CHECKPOINT ABSENT");
+
+        if(run.getUrl().contains("Woot")) taskListener.getLogger().println("BUILDER FOUND Woot");
+        else taskListener.getLogger().println("BUILDER CHECKPOINT Woot");
         createCheckpointFile(jobName, taskListener);
+
     }
 
     @Symbol("checkpoint")

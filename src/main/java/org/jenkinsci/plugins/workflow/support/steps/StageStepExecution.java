@@ -66,6 +66,10 @@ public class StageStepExecution extends AbstractStepExecutionImpl {
         if(isParameterSet(run.getParent(),"useCheckpoint")){println(getContext(),"PARAMETER EXISTS");}
         else{println(getContext(),"PARAMETER ABSENT");}
 
+
+        if(isParameterSet(run.getParent(),"USE_CHECKPOINT")){println(getContext(),"USE_CHECKPOINT EXISTS");}
+        else{println(getContext(),"USE_CHECKPOINT ABSENT");}
+
         if (canSkipStage()) {
             skipStage();
         }

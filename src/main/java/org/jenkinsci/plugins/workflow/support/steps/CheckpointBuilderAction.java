@@ -1,17 +1,20 @@
 package org.jenkinsci.plugins.workflow.support.steps;
-import hudson.model.Action;
-import hudson.model.Job;
-import hudson.model.Project;
+import hudson.model.*;
+
+import java.io.IOException;
 
 public class CheckpointBuilderAction implements Action{
 
     private Job job;
 
+    private transient Run<?, ?> run;
+    private transient TaskListener taskListener;
+
+
     public CheckpointBuilderAction(Job job) {
         this.job = job;
+
     }
-
-
 
     @Override
     public String getIconFileName() {
@@ -25,7 +28,8 @@ public class CheckpointBuilderAction implements Action{
 
     @Override
     public String getUrlName() {
-        return "/"+job.getUrl()+"build";
+        return "/"+job.getUrl()+"build?USE_CHECKPOINT=true";
+
     }
 }
 
